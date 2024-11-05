@@ -1,0 +1,69 @@
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('student', 'teacher', 'admin') DEFAULT 'student'
+);
+
+CREATE TABLE courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    teacher_id INT NOT NULL,
+    FOREIGN KEY (teacher_id) REFERENCES users(id)
+);
+
+-- Таблиця для уроків з відео
+CREATE TABLE lessons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    video_url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+CREATE TABLE assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    lesson_id INT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (lesson_id) REFERENCES lessons(id)
+);
+
+CREATE TABLE submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    assignment_id INT NOT NULL,
+    student_id INT NOT NULL,
+    content TEXT,
+    grade VARCHAR(10),
+    feedback TEXT,
+    status ENUM('pending', 'checked') DEFAULT 'pending',
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id),
+    FOREIGN KEY (student_id) REFERENCES users(id)
+);
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE enrollments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    course_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+
+
+
+INSERT INTO courses (title, description) VALUES
+('Programming Basics', 'This course will teach you the basics of Python programming.'),
+('Web learning for beginners', 'Learn the basics of HTML, CSS and JavaScript.'),
+('Databases: Basics', 'Learn SQL and database management.');
